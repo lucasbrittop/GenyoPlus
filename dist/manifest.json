@@ -1,29 +1,38 @@
 {
   "manifest_version": 3,
   "name": "Genyo Timer",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Mostra quanto tempo falta para completar o expediente no Genyo",
   "icons": {
     "16": "icons/16.png",
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
-  "action": {
-    "default_popup": "popup.html"
-  },
-  "permissions": ["storage", "alarms", "tabs"],
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs"
+  ],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": ["https://app.genyo.com.br/c/registroPonto*"],
-      "js": ["content.js"],
+      "matches": [
+        "https://app.genyo.com.br/c/registroPonto*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_end"
     },
     {
-      "matches": ["<all_urls>"],
-      "js": ["notifier.js"],
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "notifier.js"
+      ],
       "run_at": "document_idle"
     }
   ]

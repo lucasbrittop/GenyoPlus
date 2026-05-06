@@ -11,18 +11,9 @@ import {
 const ALERTA_MINIMO_MIN = 5;
 const ALERTA_MAXIMO_MIN = 10;
 
-export function calcularJornadaStatus(
-  dados: DadosDia,
-  agora = new Date(),
-  saldoBancoMin: number | null = null,
-  usarBanco = false
-): JornadaStatus {
+export function calcularJornadaStatus(dados: DadosDia, agora = new Date()): JornadaStatus {
   const atualizadoEm = agora.getTime();
   const dataReferencia = formatarDataLocal(agora);
-
-  const textoBanco = saldoBancoMin !== null
-    ? (saldoBancoMin >= 0 ? `\u{1F3E6} +${formatMinutes(saldoBancoMin)}` : `\u{1F3E6} ${formatMinutes(saldoBancoMin)}`)
-    : null;
 
   if (dados.horaEntrada) {
     const entradaMin = parseHoraEmMinutos(dados.horaEntrada);
@@ -30,10 +21,7 @@ export function calcularJornadaStatus(
     const abonoMin = parseToMinutes(dados.abonos);
     const intervMin = parseToMinutes(dados.intervalos);
     const totalExpedienteMin = prevMin + intervMin - abonoMin;
-    let saidaPrevistaMin = entradaMin + totalExpedienteMin;
-    if (usarBanco && saldoBancoMin !== null) {
-      saidaPrevistaMin -= saldoBancoMin;
-    }
+    const saidaPrevistaMin = entradaMin + totalExpedienteMin;
     const restanteMin = Math.max(0, saidaPrevistaMin - minutosDoDia(agora));
 
     if (restanteMin > 0) {
@@ -49,8 +37,6 @@ export function calcularJornadaStatus(
         estado: 'working',
         progresso: calcularProgresso(decorridoMin, totalExpedienteMin),
         textoRestante: `Faltam ${formatMinutes(restanteMin)}`,
-        saldoBancoMin,
-        textoBanco,
       };
     }
 
@@ -64,8 +50,6 @@ export function calcularJornadaStatus(
       estado: 'done',
       progresso: 100,
       textoRestante: 'Expediente completo!',
-      saldoBancoMin,
-      textoBanco,
     };
   }
 
@@ -85,15 +69,13 @@ export function calcularJornadaStatus(
       estado: 'working',
       progresso: 0,
       textoRestante: `Faltam ~${formatMinutes(falta)}`,
-      saldoBancoMin,
-      textoBanco,
     };
   }
 
   if (saldoMin > 0) {
     return {
       saidaPrevistaMin: null,
-      saidaPrevista: 'J\u00e1 pode sair! \u2713',
+      saidaPrevista: 'Já pode sair! ✓',
       restanteMin: 0,
       podeAlertar: false,
       atualizadoEm,
@@ -101,8 +83,6 @@ export function calcularJornadaStatus(
       estado: 'overtime',
       progresso: 100,
       textoRestante: `Extra +${formatMinutes(saldoMin)}`,
-      saldoBancoMin,
-      textoBanco,
     };
   }
 
@@ -116,8 +96,6 @@ export function calcularJornadaStatus(
     estado: 'done',
     progresso: 0,
     textoRestante: prevMin > 0 ? 'Aguardando registros...' : 'Expediente completo!',
-    saldoBancoMin,
-    textoBanco,
   };
 }
 

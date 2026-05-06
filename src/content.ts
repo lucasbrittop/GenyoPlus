@@ -1,18 +1,15 @@
 import { criarBar, atualizarBar } from './bar';
-import { extrairDados, extrairBancoHoras } from './extract';
+import { extrairDados } from './extract';
 import { calcularJornadaStatus } from './schedule';
 import { GENYO_TIMER_STORAGE_KEY, JornadaStatus } from './types';
-import { carregarConfig } from './storage';
 
 function iniciar(): void {
   criarBar();
 
-  async function atualizar(): Promise<void> {
+  function atualizar(): void {
     const dados = extrairDados();
     if (dados) {
-      const config = await carregarConfig();
-      const saldoBancoMin = extrairBancoHoras();
-      const status = calcularJornadaStatus(dados, new Date(), saldoBancoMin, config.usarBancoHoras);
+      const status = calcularJornadaStatus(dados);
       atualizarBar(status);
       salvarStatus(status);
     } else {
