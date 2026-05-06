@@ -1,4 +1,5 @@
 import { DadosDia } from './types';
+import { parseToMinutes } from './time';
 
 export function extrairDados(): DadosDia | null {
   const tabela = document.querySelector('#tabelaHistoricoPontos tbody');
@@ -29,6 +30,23 @@ function extrairPrimeiraEntrada(linhaDetalhes: Element): string | null {
   const primeiraEntrada = timeline?.querySelector('li[id="Entrada"]');
   const hora = primeiraEntrada?.querySelector('.date')?.textContent?.trim();
   return hora || null;
+}
+
+export function extrairBancoHoras(): number | null {
+  const trab = document.getElementById('horasTrabalhadasMesCorrente');
+  const prev = document.getElementById('horasPrevistasMesCorrente');
+  if (!trab || !prev) return null;
+
+  const trabText = trab.textContent?.trim() || '';
+  const prevText = prev.textContent?.trim() || '';
+
+  if (trabText.length < 3 || prevText.length < 3) {
+    const btn = document.querySelector('#carregarHorasPrevistasMesCorrente button') as HTMLElement | null;
+    btn?.click();
+    return null;
+  }
+
+  return parseToMinutes(trabText) - parseToMinutes(prevText);
 }
 
 function extrairStatus(): DadosDia['status'] {

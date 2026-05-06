@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { width: 260px; margin: 0; font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; }
+  .container { padding: 12px; }
+  h3 { margin: 0 0 10px 0; font-size: 14px; }
+  label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .desc { color: #888; font-size: 11px; margin: 2px 0 0 22px; }
+  hr { border: 0; border-top: 1px solid #e0e0e0; margin: 10px 0; }
+  .info-row { display: flex; justify-content: space-between; margin: 4px 0; }
+  .info-label { color: #666; }
+  .info-value { font-weight: 600; }
+  .banco-positivo { color: #4caf50; }
+  .banco-negativo { color: #f44336; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h3>Genyo Timer</h3>
+  <label>
+    <input type="checkbox" id="toggle-banco">
+    Usar banco de horas
+  </label>
+  <div class="desc">Desconta o saldo do mês no horário de saída</div>
+  <hr>
+  <div class="info-row">
+    <span class="info-label">🏦 Saldo do mês</span>
+    <span class="info-value" id="popup-banco">--</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">⏳ Hoje</span>
+    <span class="info-value" id="popup-hoje">--</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">🏁 Saída</span>
+    <span class="info-value" id="popup-saida">--</span>
+  </div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

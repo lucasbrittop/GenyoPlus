@@ -10,6 +10,7 @@ const entries = [
   ['content', 'src/content.ts'],
   ['background', 'src/background.ts'],
   ['notifier', 'src/notifier.ts'],
+  ['popup', 'src/popup.ts'],
 ];
 const watch = process.argv.includes('--watch');
 

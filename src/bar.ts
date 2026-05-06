@@ -20,6 +20,8 @@ export function criarBar(): HTMLElement {
         <span class="gt-sep">|</span>
         <span class="gt-label">🏁</span>
         <span class="gt-value" id="gt-saida-prevista">--:--</span>
+        <span class="gt-sep gt-banco-sep">|</span>
+        <span class="gt-value gt-banco-val" id="gt-banco-horas"></span>
       </div>
     </div>
   `;
@@ -41,6 +43,17 @@ export function atualizarBar(status: JornadaStatus): void {
   saidaPrevista.textContent = status.estado === 'done' && status.saidaPrevistaMin !== null ? '✓' : status.saidaPrevista;
   bar.className = `gt-status-${status.estado}`;
   progressBar.style.width = `${status.progresso}%`;
+
+  const bancoEl = document.getElementById('gt-banco-horas');
+  const bancoSep = document.querySelector('.gt-banco-sep') as HTMLElement | null;
+  if (status.textoBanco) {
+    if (bancoEl) bancoEl.textContent = status.textoBanco;
+    if (bancoSep) bancoSep.style.display = '';
+    if (bancoEl) bancoEl.style.display = '';
+  } else {
+    if (bancoEl) bancoEl.style.display = 'none';
+    if (bancoSep) bancoSep.style.display = 'none';
+  }
 }
 
 function injectStyles(): void {
@@ -96,6 +109,7 @@ function injectStyles(): void {
     .gt-status-working .gt-progress-bar { background: #ff9800; }
     .gt-status-overtime .gt-progress-bar { background: #f44336; }
     .gt-status-done .gt-progress-bar { background: #4caf50; }
+    .gt-banco-val { font-size: 11px; color: #81c784; }
   `;
   document.head.appendChild(style);
 }

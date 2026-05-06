@@ -32,6 +32,7 @@ async function verificarAlertaSaida(): Promise<void> {
   if (!statusSalvo) return;
 
   const status = atualizarRestante(statusSalvo);
+  atualizarBadge(status);
   const alertKey = criarChaveAlerta(status);
   if (!status.podeAlertar || !alertKey) return;
 
@@ -78,4 +79,24 @@ function isJornadaStatus(value: unknown): value is JornadaStatus {
     typeof status.atualizadoEm === 'number' &&
     typeof status.dataReferencia === 'string'
   );
+}
+
+function atualizarBadge(status: JornadaStatus): void {
+  const r = status.restanteMin;
+
+  if (status.estado === 'done') {
+    chrome.action.setBadgeText({ text: '\u2713' });
+    chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+  } else if (r > 120) {
+    chrome.action.setBadgeText({ text: `${Math.floor(r / 60)}h` });
+    chrome.action.setBadgeBackgroundColor({ color: '#f44336' });
+  } else if (r > 60) {
+    chrome.action.setBadgeText({ text: `${Math.floor(r / 60)}h` });
+    chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
+  } else if (r > 0) {
+    chrome.action.setBadgeText({ text: `${r}m` });
+    chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+  } else {
+    chrome.action.setBadgeText({ text: '' });
+  }
 }

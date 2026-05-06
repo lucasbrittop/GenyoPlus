@@ -20,6 +20,8 @@ export interface JornadaStatus {
   estado: JornadaEstado;
   progresso: number;
   textoRestante: string;
+  saldoBancoMin: number | null;
+  textoBanco: string | null;
 }
 
 export interface ShowExitAlertMessage {
@@ -29,3 +31,10 @@ export interface ShowExitAlertMessage {
 
 export const GENYO_TIMER_STORAGE_KEY = 'genyoTimerStatus';
 export const GENYO_TIMER_LAST_ALERTED_KEY = 'genyoTimerLastAlertedExitKey';
+
+export interface ConfigToggles {
+  usarBancoHoras: boolean;
+}
+
+export const CONFIG_PADRAO: ConfigToggles = { usarBancoHoras: false };
+export const GENYO_TIMER_CONFIG_KEY = 'genyoTimerConfig';
