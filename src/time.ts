@@ -21,9 +21,8 @@ export function parseHoraEmMinutos(horaStr: string): number {
   return h * 60 + m;
 }
 
-export function agoraEmMinutos(): number {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
+export function agoraEmMinutos(date = new Date()): number {
+  return date.getHours() * 60 + date.getMinutes();
 }
 
 export function formatarHora(minutos: number): string {

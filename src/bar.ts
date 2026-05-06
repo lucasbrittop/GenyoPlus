@@ -1,5 +1,4 @@
-import { DadosDia } from './types';
-import { parseToMinutes, formatMinutes, parseHoraEmMinutos, agoraEmMinutos, formatarHora, calcularProgresso } from './time';
+import { JornadaStatus } from './types';
 
 const BAR_ID = 'genyo-timer-floating-bar';
 
@@ -30,7 +29,7 @@ export function criarBar(): HTMLElement {
   return bar;
 }
 
-export function atualizarBar(dados: DadosDia): void {
+export function atualizarBar(status: JornadaStatus): void {
   const tempoRestante = document.getElementById('gt-tempo-restante');
   const progressBar = document.getElementById('gt-progress-bar');
   const saidaPrevista = document.getElementById('gt-saida-prevista');
@@ -38,53 +37,10 @@ export function atualizarBar(dados: DadosDia): void {
 
   if (!tempoRestante || !progressBar || !saidaPrevista || !bar) return;
 
-  if (dados.horaEntrada) {
-    const entradaMin = parseHoraEmMinutos(dados.horaEntrada);
-    const prevMin = parseToMinutes(dados.horasPrevistas);
-    const abonoMin = parseToMinutes(dados.abonos);
-    const intervMin = parseToMinutes(dados.intervalos);
-    const totalExpedienteMin = prevMin + intervMin - abonoMin;
-    const fimFixoMin = entradaMin + totalExpedienteMin;
-    const agoraMin = agoraEmMinutos();
-    const restanteMin = Math.max(0, fimFixoMin - agoraMin);
-
-    if (restanteMin > 0) {
-      const decorridoMin = Math.max(0, agoraMin - entradaMin);
-      const progresso = calcularProgresso(decorridoMin, totalExpedienteMin);
-      tempoRestante.textContent = `Faltam ${formatMinutes(restanteMin)}`;
-      saidaPrevista.textContent = formatarHora(fimFixoMin);
-      bar.className = 'gt-status-working';
-      progressBar.style.width = `${progresso}%`;
-    } else {
-      tempoRestante.textContent = 'Expediente completo!';
-      saidaPrevista.textContent = '✓';
-      bar.className = 'gt-status-done';
-      progressBar.style.width = '100%';
-    }
-    return;
-  }
-
-  const prevMin = parseToMinutes(dados.horasPrevistas);
-  const trabMin = parseToMinutes(dados.horasTrabalhadas);
-  const saldoMin = parseToMinutes(dados.saldo);
-
-  if (saldoMin < 0) {
-    const falta = Math.abs(saldoMin);
-    tempoRestante.textContent = `Faltam ~${formatMinutes(falta)}`;
-    saidaPrevista.textContent = '--:--';
-    bar.className = 'gt-status-working';
-    progressBar.style.width = '0%';
-  } else if (saldoMin > 0) {
-    tempoRestante.textContent = `Extra +${formatMinutes(saldoMin)}`;
-    saidaPrevista.textContent = 'Já pode sair! ✓';
-    bar.className = 'gt-status-overtime';
-    progressBar.style.width = '100%';
-  } else {
-    tempoRestante.textContent = prevMin > 0 ? 'Aguardando registros...' : 'Expediente completo!';
-    saidaPrevista.textContent = '--:--';
-    bar.className = 'gt-status-done';
-    progressBar.style.width = '0%';
-  }
+  tempoRestante.textContent = status.textoRestante;
+  saidaPrevista.textContent = status.estado === 'done' && status.saidaPrevistaMin !== null ? '✓' : status.saidaPrevista;
+  bar.className = `gt-status-${status.estado}`;
+  progressBar.style.width = `${status.progresso}%`;
 }
 
 function injectStyles(): void {

@@ -8,9 +8,20 @@
     "48": "icons/48.png",
     "128": "icons/128.png"
   },
-  "content_scripts": [{
-    "matches": ["https://app.genyo.com.br/c/registroPonto*"],
-    "js": ["content.js"],
-    "run_at": "document_end"
-  }]
+  "permissions": ["storage", "alarms", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://app.genyo.com.br/c/registroPonto*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["notifier.js"],
+      "run_at": "document_idle"
+    }
+  ]
 }
